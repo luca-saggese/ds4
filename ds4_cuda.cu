@@ -24458,17 +24458,48 @@ static int routed_moe_launch(
         const uint64_t gate_total = (uint64_t)n_total_expert * gate_expert_bytes;
         const uint64_t down_total = (uint64_t)n_total_expert * down_expert_bytes;
         const int mmq_tier = ds4_tensor_device_idx(out);
-        const char *gate_w = cuda_resolve_weight_ptr(model_map, gate_offset, gate_total, mmq_tier, "moe gate mmq");
-        const char *up_w = gate_w ? cuda_resolve_weight_ptr(model_map, up_offset, gate_total, mmq_tier, "moe up mmq") : NULL;
-        const char *down_w = up_w ? cuda_resolve_weight_ptr(model_map, down_offset, down_total, mmq_tier, "moe down mmq") : NULL;
+        const uint64_t slot_count = (uint64_t)n_tokens * n_expert;
+        const int use_stream_selected_cache =
+            allow_streaming &&
+            g_ssd_streaming_mode &&
+            g_stream_selected_cache.valid &&
+            g_stream_selected_cache.logical_tier == mmq_tier &&
+            g_stream_selected_cache.model_map == model_map &&
+            g_stream_selected_cache.layer == layer_index &&
+            g_stream_selected_cache.n_total_expert == n_total_expert &&
+            g_stream_selected_cache.slot_count >= slot_count &&
+            g_stream_selected_cache.gate_offset == gate_offset &&
+            g_stream_selected_cache.up_offset == up_offset &&
+            g_stream_selected_cache.down_offset == down_offset &&
+            g_stream_selected_cache.gate_expert_bytes == gate_expert_bytes &&
+            g_stream_selected_cache.down_expert_bytes == down_expert_bytes &&
+            g_stream_selected_cache.gate_ptr &&
+            g_stream_selected_cache.up_ptr &&
+            g_stream_selected_cache.down_ptr &&
+            g_stream_selected_cache.slot_selected_tensor.ptr &&
+            g_stream_selected_cache.slot_selected_tensor.bytes >=
+                slot_count * sizeof(int32_t);
+        const ds4_gpu_tensor *mmq_selected = use_stream_selected_cache ?
+            &g_stream_selected_cache.slot_selected_tensor : selected;
+        const uint32_t mmq_expert_count = use_stream_selected_cache ?
+            g_stream_selected_cache.compact_count : n_total_expert;
+        const char *gate_w = use_stream_selected_cache ?
+            g_stream_selected_cache.gate_ptr :
+            cuda_resolve_weight_ptr(model_map, gate_offset, gate_total, mmq_tier, "moe gate mmq");
+        const char *up_w = gate_w ? (use_stream_selected_cache ?
+            g_stream_selected_cache.up_ptr :
+            cuda_resolve_weight_ptr(model_map, up_offset, gate_total, mmq_tier, "moe up mmq")) : NULL;
+        const char *down_w = up_w ? (use_stream_selected_cache ?
+            g_stream_selected_cache.down_ptr :
+            cuda_resolve_weight_ptr(model_map, down_offset, down_total, mmq_tier, "moe down mmq")) : NULL;
         if (down_w) {
             const uint64_t n_assignments = (uint64_t)n_tokens * n_expert;
             int rc = ds4_mmq_iq2_xxs_moe_pair(
                     gate_w, up_w, (const float *)x->ptr,
-                    (const int32_t *)selected->ptr,
+                    (const int32_t *)mmq_selected->ptr,
                     (float *)gate->ptr, (float *)up->ptr,
                     (int)expert_mid_dim, (int)expert_in_dim,
-                    (int)n_tokens, (int)n_total_expert, (int)n_expert,
+                    (int)n_tokens, (int)mmq_expert_count, (int)n_expert,
                     (cudaStream_t)0);
             if (rc == 0) {
                 const uint64_t mid_floats = n_assignments * expert_mid_dim;
@@ -24482,10 +24513,10 @@ static int routed_moe_launch(
             if (rc == 0) {
                 rc = ds4_mmq_q2_K_moe(
                         down_w, (const float *)mid->ptr,
-                        (const int32_t *)selected->ptr,
+                        (const int32_t *)mmq_selected->ptr,
                         (float *)down->ptr,
                         (int)out_dim, (int)expert_mid_dim,
-                        (int)n_assignments, (int)n_total_expert,
+                        (int)n_assignments, (int)mmq_expert_count,
                         /*n_expert_used=*/1,
                         (cudaStream_t)0);
             }
