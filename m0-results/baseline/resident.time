@@ -1,0 +1,23 @@
+	Command being timed: "./ds4 -m ./DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf --ctx 1024 --temp 0 --tokens 32 --nothink -p Explain in one short sentence why the sky appears blue."
+	User time (seconds): 11.76
+	System time (seconds): 33.88
+	Percent of CPU this job got: 111%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:40.86
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1851972
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 20
+	Minor (reclaiming a frame) page faults: 1435810
+	Voluntary context switches: 22211
+	Involuntary context switches: 502
+	Swaps: 0
+	File system inputs: 182265200
+	File system outputs: 32
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

@@ -1,0 +1,2 @@
+ssd_cold_repeat=IDENTICAL
+resident_vs_ssd_cold=DIFFERENT_BASELINE_PATHS
