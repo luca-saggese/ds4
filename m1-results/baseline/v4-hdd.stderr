@@ -1,0 +1,171 @@
+ds4: Linux cuda backend set oom_score_adj=1000
+ds4: CUDA backend initialized on NVIDIA GB10 (sm_121) dev=0
+ds4: SSD streaming initial cuda model map (1 spans, 0.99 GiB tensor span)
+ds4: CUDA host registration skipped: operation not supported
+ds4: CUDA preparing model tensor mappings
+ds4: CUDA loading model tensors into device cache
+ds4: CUDA startup model preparation covered 0.99 GiB of tensor spans in 4.573s
+ds4: cuda backend initialized for graph diagnostics
+ds4: memory: KV 0.39 GiB (raw 0.34 + compressed 0.05) + buffers 0.03 GiB + resident model 2.81 GiB = 3.23 GiB planned
+ds4: memory detail: ctx=4096 prefill_cap=4096 raw_kv_rows=4096 compressed_kv_rows=1026 backend=cuda
+ds4: memory: KV 0.39 GiB (raw 0.34 + compressed 0.05) + buffers 0.03 GiB = 0.42 GiB context
+ds4: memory detail: ctx=4096 prefill_cap=4096 raw_kv_rows=4096 compressed_kv_rows=1026 backend=cuda
+ds4: using GPU graph generation with graph prefill
+ds4: CUDA loading model tensors 1.16 GiB cached
+ds4: CUDA loading model tensors 2.63 GiB cached
+ds4: gpu prefill layer 1/43
+ds4: CUDA loading model tensors 2.99 GiB cached
+ds4: CUDA loading model tensors 4.27 GiB cached
+ds4: gpu prefill layer 2/43
+ds4: CUDA loading model tensors 4.85 GiB cached
+ds4: CUDA loading model tensors 6.13 GiB cached
+ds4: gpu prefill layer 3/43
+ds4: CUDA loading model tensors 6.68 GiB cached
+ds4: CUDA loading model tensors 7.96 GiB cached
+ds4: gpu prefill layer 4/43
+ds4: CUDA loading model tensors 8.53 GiB cached
+ds4: CUDA loading model tensors 9.81 GiB cached
+ds4: gpu prefill layer 5/43
+ds4: CUDA loading model tensors 10.36 GiB cached
+ds4: CUDA loading model tensors 11.71 GiB cached
+ds4: gpu prefill layer 6/43
+ds4: CUDA loading model tensors 12.22 GiB cached
+ds4: CUDA loading model tensors 13.50 GiB cached
+ds4: gpu prefill layer 7/43
+ds4: CUDA loading model tensors 14.05 GiB cached
+ds4: CUDA loading model tensors 15.33 GiB cached
+ds4: gpu prefill layer 8/43
+ds4: CUDA loading model tensors 15.91 GiB cached
+ds4: CUDA loading model tensors 16.03 GiB cached
+ds4: CUDA loading model tensors 17.31 GiB cached
+ds4: gpu prefill layer 9/43
+ds4: CUDA loading model tensors 17.80 GiB cached
+ds4: CUDA loading model tensors 19.02 GiB cached
+ds4: gpu prefill layer 10/43
+ds4: CUDA loading model tensors 19.59 GiB cached
+ds4: CUDA loading model tensors 20.87 GiB cached
+ds4: gpu prefill layer 11/43
+ds4: CUDA loading model tensors 21.42 GiB cached
+ds4: CUDA loading model tensors 22.70 GiB cached
+ds4: gpu prefill layer 12/43
+ds4: CUDA loading model tensors 23.28 GiB cached
+ds4: CUDA loading model tensors 24.56 GiB cached
+ds4: gpu prefill layer 13/43
+ds4: CUDA loading model tensors 25.11 GiB cached
+ds4: CUDA loading model tensors 26.39 GiB cached
+ds4: gpu prefill layer 14/43
+ds4: CUDA loading model tensors 27.03 GiB cached
+ds4: CUDA loading model tensors 28.25 GiB cached
+ds4: gpu prefill layer 15/43
+ds4: CUDA loading model tensors 28.80 GiB cached
+ds4: CUDA loading model tensors 30.02 GiB cached
+ds4: gpu prefill layer 16/43
+ds4: CUDA loading model tensors 30.65 GiB cached
+ds4: CUDA loading model tensors 31.87 GiB cached
+ds4: CUDA loading model tensors 32.06 GiB cached
+ds4: gpu prefill layer 17/43
+ds4: CUDA loading model tensors 32.67 GiB cached
+ds4: CUDA loading model tensors 33.95 GiB cached
+ds4: gpu prefill layer 18/43
+ds4: CUDA loading model tensors 34.65 GiB cached
+ds4: CUDA loading model tensors 35.94 GiB cached
+ds4: gpu prefill layer 19/43
+ds4: CUDA loading model tensors 36.30 GiB cached
+ds4: CUDA loading model tensors 37.58 GiB cached
+ds4: gpu prefill layer 20/43
+ds4: CUDA loading model tensors 38.09 GiB cached
+ds4: CUDA loading model tensors 39.37 GiB cached
+ds4: gpu prefill layer 21/43
+ds4: CUDA loading model tensors 39.92 GiB cached
+ds4: CUDA loading model tensors 41.20 GiB cached
+ds4: gpu prefill layer 22/43
+ds4: CUDA loading model tensors 41.78 GiB cached
+ds4: CUDA loading model tensors 43.06 GiB cached
+ds4: gpu prefill layer 23/43
+ds4: CUDA loading model tensors 43.55 GiB cached
+ds4: CUDA loading model tensors 44.89 GiB cached
+ds4: gpu prefill layer 24/43
+ds4: CUDA loading model tensors 45.47 GiB cached
+ds4: CUDA loading model tensors 46.75 GiB cached
+ds4: gpu prefill layer 25/43
+ds4: CUDA loading model tensors 47.23 GiB cached
+ds4: CUDA loading model tensors 48.06 GiB cached
+ds4: gpu prefill layer 26/43
+ds4: CUDA loading model tensors 49.09 GiB cached
+ds4: CUDA loading model tensors 50.31 GiB cached
+ds4: gpu prefill layer 27/43
+ds4: CUDA loading model tensors 50.92 GiB cached
+ds4: CUDA loading model tensors 52.14 GiB cached
+ds4: gpu prefill layer 28/43
+ds4: CUDA loading model tensors 52.78 GiB cached
+ds4: CUDA loading model tensors 54.06 GiB cached
+ds4: gpu prefill layer 29/43
+ds4: CUDA loading model tensors 54.61 GiB cached
+ds4: CUDA loading model tensors 55.82 GiB cached
+ds4: gpu prefill layer 30/43
+ds4: CUDA loading model tensors 56.46 GiB cached
+ds4: CUDA loading model tensors 57.74 GiB cached
+ds4: gpu prefill layer 31/43
+ds4: CUDA loading model tensors 58.29 GiB cached
+ds4: CUDA loading model tensors 59.57 GiB cached
+ds4: gpu prefill layer 32/43
+ds4: CUDA loading model tensors 60.15 GiB cached
+ds4: CUDA loading model tensors 61.43 GiB cached
+ds4: gpu prefill layer 33/43
+ds4: CUDA loading model tensors 61.98 GiB cached
+ds4: CUDA loading model tensors 63.26 GiB cached
+ds4: gpu prefill layer 34/43
+ds4: CUDA loading model tensors 63.84 GiB cached
+ds4: CUDA loading model tensors 64.02 GiB cached
+ds4: CUDA loading model tensors 65.31 GiB cached
+ds4: gpu prefill layer 35/43
+ds4: CUDA loading model tensors 65.73 GiB cached
+ds4: CUDA loading model tensors 66.95 GiB cached
+ds4: gpu prefill layer 36/43
+ds4: CUDA loading model tensors 67.52 GiB cached
+ds4: CUDA loading model tensors 68.74 GiB cached
+ds4: gpu prefill layer 37/43
+ds4: CUDA loading model tensors 69.35 GiB cached
+ds4: CUDA loading model tensors 70.64 GiB cached
+ds4: gpu prefill layer 38/43
+ds4: CUDA loading model tensors 71.21 GiB cached
+ds4: CUDA loading model tensors 72.49 GiB cached
+ds4: gpu prefill layer 39/43
+ds4: CUDA loading model tensors 73.04 GiB cached
+ds4: CUDA loading model tensors 74.32 GiB cached
+ds4: gpu prefill layer 40/43
+ds4: CUDA loading model tensors 74.90 GiB cached
+ds4: CUDA loading model tensors 76.24 GiB cached
+ds4: gpu prefill layer 41/43
+ds4: CUDA loading model tensors 76.73 GiB cached
+ds4: CUDA loading model tensors 78.01 GiB cached
+ds4: gpu prefill layer 42/43
+ds4: CUDA loading model tensors 78.59 GiB cached
+ds4: CUDA loading model tensors 79.87 GiB cached
+ds4: CUDA loading model tensors 80.05 GiB cached
+ds4: gpu prefill layer 43/43
+
+ds4: prefill: 0.02 t/s, generation: 0.04 t/s
+	Command being timed: "./ds4 -m /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf --ssd-streaming --ssd-streaming-cold --ctx 4096 --temp 0 --tokens 16 --nothink -p Reply with exactly: CUDA BASELINE OK"
+	User time (seconds): 4.63
+	System time (seconds): 58.74
+	Percent of CPU this job got: 5%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 17:38.32
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1325760
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 306
+	Minor (reclaiming a frame) page faults: 324610
+	Voluntary context switches: 118044
+	Involuntary context switches: 440
+	Swaps: 0
+	File system inputs: 242880140
+	File system outputs: 272
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

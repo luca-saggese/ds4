@@ -1,0 +1,226 @@
+session-snapshot:
+ds4: Linux cuda backend set oom_score_adj=1000
+ds4: CUDA backend initialized on NVIDIA GB10 (sm_121) dev=0
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: q2k aligned repack base: 43 tensors 28.22 GiB in 128.0s (threads=6)
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: iq2 aligned repack base: 86 tensors 44.34 GiB in 201.0s (threads=6)
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: q8 aligned repack base: 345 tensors 6.15 GiB in 33.9s (threads=6)
+ds4: built 474 aligned CUDA artifacts (78.71 GiB) in 362.9s; expert raw residency replaced
+ds4: CUDA aligned artifacts replace expert residency; leaving the 80.76 GiB model mmap unpinned
+ds4: CUDA preparing model tensor mappings
+ds4: CUDA loading model tensors into device cache
+ds4: CUDA loading model tensors 2.06 GiB cached
+ds4: CUDA prepared model tensor mappings 2.99 GiB
+ds4: CUDA loading model tensors 4.22 GiB cached
+ds4: CUDA prepared model tensor mappings 5.94 GiB
+ds4: CUDA loading model tensors 6.32 GiB cached
+ds4: CUDA prepared model tensor mappings 8.20 GiB
+ds4: CUDA startup model preparation covered 8.20 GiB of tensor spans in 43.335s
+ds4: cuda backend initialized for graph diagnostics
+ds4-test: snapshot prompt=13 ctx=1024 glm_mtp=0
+ds4: routed MoE using aligned CUDA artifacts
+session-snapshot: OK
+long-context:
+ds4-test: long-context prefill 0/30474
+ds4: dense Q8 prefill using aligned D2R
+ds4: moe gateup y-indirect q8 staging engage (flat-pool p5b, first n_tokens=4096 n_assign=24576)
+ds4: routed MoE using fused-direct CUDA prefill
+ds4-test: long-context prefill 8192/30474
+ds4-test: long-context prefill 16384/30474
+ds4-test: long-context prefill 24576/30474
+ds4-test: long-context prefill 30474/30474
+long-context: OK
+tool-call-quality:
+ds4-test: tool-call quality fast path
+ds4-test: post-tool-result turn1 finish_reason=tool_calls tool_calls=1 turn2 finish_reason=stop tool_calls=0 replay_mem=1
+ds4-test: tool-call quality exact path
+ds4: CUDA backend initialized on NVIDIA GB10 (sm_121) dev=0
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: q2k aligned repack base: 43 tensors 28.22 GiB in 119.0s (threads=6)
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: iq2 aligned repack base: 86 tensors 44.34 GiB in 186.1s (threads=6)
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: q8 aligned repack base: 345 tensors 6.15 GiB in 28.4s (threads=6)
+ds4: built 474 aligned CUDA artifacts (78.71 GiB) in 333.4s; expert raw residency replaced
+ds4: CUDA aligned artifacts replace expert residency; leaving the 80.76 GiB model mmap unpinned
+ds4: CUDA preparing model tensor mappings
+ds4: CUDA loading model tensors into device cache
+ds4: CUDA loading model tensors 2.37 GiB cached
+ds4: CUDA prepared model tensor mappings 2.99 GiB
+ds4: CUDA loading model tensors 4.78 GiB cached
+ds4: CUDA prepared model tensor mappings 5.94 GiB
+ds4: CUDA loading model tensors 7.17 GiB cached
+ds4: CUDA startup model preparation covered 8.20 GiB of tensor spans in 35.059s
+ds4: cuda backend initialized for graph diagnostics
+ds4-test: post-tool-result turn1 finish_reason=tool_calls tool_calls=1 turn2 finish_reason=stop tool_calls=0 replay_mem=1
+tool-call-quality: OK
+think-tool-recovery:
+ds4-test: think-tool-recovery complete=1 calls=1 name=list_files
+think-tool-recovery: OK
+logprob-vectors:
+ds4: CUDA backend initialized on NVIDIA GB10 (sm_121) dev=0
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: q2k aligned repack base: 43 tensors 28.22 GiB in 119.1s (threads=6)
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: iq2 aligned repack base: 86 tensors 44.34 GiB in 187.9s (threads=6)
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: q8 aligned repack base: 345 tensors 6.15 GiB in 28.0s (threads=6)
+ds4: built 474 aligned CUDA artifacts (78.71 GiB) in 335.0s; expert raw residency replaced
+ds4: CUDA aligned artifacts replace expert residency; leaving the 80.76 GiB model mmap unpinned
+ds4: CUDA preparing model tensor mappings
+ds4: CUDA loading model tensors into device cache
+ds4: CUDA loading model tensors 2.31 GiB cached
+ds4: CUDA prepared model tensor mappings 2.99 GiB
+ds4: CUDA loading model tensors 4.72 GiB cached
+ds4: CUDA prepared model tensor mappings 5.94 GiB
+ds4: CUDA loading model tensors 7.10 GiB cached
+ds4: CUDA startup model preparation covered 8.20 GiB of tensor spans in 36.100s
+ds4: cuda backend initialized for graph diagnostics
+ds4-test: vector short_italian_fact
+ds4-test: vector short_code_completion
+ds4-test: vector short_reasoning_plain
+ds4-test: vector long_memory_archive
+ds4-test: vector long_code_audit
+logprob-vectors: OK
+metal-ssd-streaming-cache-pressure:
+ds4-test: Metal SSD streaming cache-pressure repro skipped (Metal-only)
+metal-ssd-streaming-cache-pressure: OK
+local-golden-vectors:
+ds4: CUDA backend initialized on NVIDIA GB10 (sm_121) dev=0
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: q2k aligned repack base: 43 tensors 28.22 GiB in 118.7s (threads=6)
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: iq2 aligned repack base: 86 tensors 44.34 GiB in 188.2s (threads=6)
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: q8 aligned repack base: 345 tensors 6.15 GiB in 28.3s (threads=6)
+ds4: built 474 aligned CUDA artifacts (78.71 GiB) in 335.2s; expert raw residency replaced
+ds4: CUDA aligned artifacts replace expert residency; leaving the 80.76 GiB model mmap unpinned
+ds4: CUDA preparing model tensor mappings
+ds4: CUDA loading model tensors into device cache
+ds4: CUDA loading model tensors 2.43 GiB cached
+ds4: CUDA prepared model tensor mappings 2.99 GiB
+ds4: CUDA loading model tensors 4.78 GiB cached
+ds4: CUDA prepared model tensor mappings 5.94 GiB
+ds4: CUDA loading model tensors 7.10 GiB cached
+ds4: CUDA startup model preparation covered 8.20 GiB of tensor spans in 35.485s
+ds4: cuda backend initialized for graph diagnostics
+ds4-test: local golden long_story_4096 top1 ref=4371 cand=4371 top5_overlap=5/5 top20_overlap=20/20 top64_overlap=56/64 top20_max_abs=1.67112
+local-golden-vectors: OK
+metal-short-prefill:
+ds4: CUDA backend initialized on NVIDIA GB10 (sm_121) dev=0
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: q2k aligned repack base: 43 tensors 28.22 GiB in 117.7s (threads=6)
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: iq2 aligned repack base: 86 tensors 44.34 GiB in 186.0s (threads=6)
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: q8 aligned repack base: 345 tensors 6.15 GiB in 29.1s (threads=6)
+ds4: built 474 aligned CUDA artifacts (78.71 GiB) in 332.9s; expert raw residency replaced
+ds4: CUDA aligned artifacts replace expert residency; leaving the 80.76 GiB model mmap unpinned
+ds4: CUDA preparing model tensor mappings
+ds4: CUDA loading model tensors into device cache
+ds4: CUDA loading model tensors 2.31 GiB cached
+ds4: CUDA prepared model tensor mappings 2.99 GiB
+ds4: CUDA loading model tensors 4.66 GiB cached
+ds4: CUDA prepared model tensor mappings 5.94 GiB
+ds4: CUDA loading model tensors 7.04 GiB cached
+ds4: CUDA startup model preparation covered 8.20 GiB of tensor spans in 35.865s
+ds4: cuda backend initialized for graph diagnostics
+metal-short-prefill: OK
+glm53-continued-prefill:
+ds4-test: glm53-continued-prefill skipped (GLM 5.3 model required)
+glm53-continued-prefill: OK
+metal-kernels:
+ds4: CUDA host registration skipped: operation not supported
+ds4: CUDA host registration skipped: operation not supported
+ds4: CUDA host registration skipped: operation not supported
+ds4: CUDA host registration skipped: operation not supported
+metal-kernels: OK
+metal-tensor-equivalence:
+ds4: CUDA backend initialized on NVIDIA GB10 (sm_121) dev=0
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: q2k aligned repack base: 43 tensors 28.22 GiB in 118.4s (threads=6)
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: iq2 aligned repack base: 86 tensors 44.34 GiB in 187.2s (threads=6)
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: q8 aligned repack base: 345 tensors 6.15 GiB in 27.5s (threads=6)
+ds4: built 474 aligned CUDA artifacts (78.71 GiB) in 333.1s; expert raw residency replaced
+ds4: CUDA aligned artifacts replace expert residency; leaving the 80.76 GiB model mmap unpinned
+ds4: CUDA preparing model tensor mappings
+ds4: CUDA loading model tensors into device cache
+ds4: CUDA loading model tensors 2.37 GiB cached
+ds4: CUDA prepared model tensor mappings 2.99 GiB
+ds4: CUDA loading model tensors 4.78 GiB cached
+ds4: CUDA prepared model tensor mappings 5.94 GiB
+ds4: CUDA loading model tensors 7.10 GiB cached
+ds4: CUDA startup model preparation covered 8.20 GiB of tensor spans in 35.572s
+ds4: cuda backend initialized for graph diagnostics
+ds4-test: Tensor equivalence candidate route=auto
+ds4: CUDA backend initialized on NVIDIA GB10 (sm_121) dev=0
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: q2k aligned repack base: 43 tensors 28.22 GiB in 119.2s (threads=6)
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: iq2 aligned repack base: 86 tensors 44.34 GiB in 187.2s (threads=6)
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: q8 aligned repack base: 345 tensors 6.15 GiB in 28.5s (threads=6)
+ds4: built 474 aligned CUDA artifacts (78.71 GiB) in 334.9s; expert raw residency replaced
+ds4: CUDA aligned artifacts replace expert residency; leaving the 80.76 GiB model mmap unpinned
+ds4: CUDA preparing model tensor mappings
+ds4: CUDA loading model tensors into device cache
+ds4: CUDA loading model tensors 2.31 GiB cached
+ds4: CUDA prepared model tensor mappings 2.99 GiB
+ds4: CUDA loading model tensors 4.60 GiB cached
+ds4: CUDA prepared model tensor mappings 5.94 GiB
+ds4: CUDA loading model tensors 6.98 GiB cached
+ds4: CUDA startup model preparation covered 8.20 GiB of tensor spans in 36.329s
+ds4: cuda backend initialized for graph diagnostics
+ds4-test: Tensor equivalence short_italian_fact top1 ref=108149 cand=108149 top5_overlap=5/5 overlap=20/20 max_rank_delta=0 rms=0 max_abs=0 top20_max_abs=0
+ds4-test: Tensor equivalence short_italian_fact largest deltas: id=0 ref=-22.2635 cand=-22.2635 abs=0 id=1 ref=18.9047 cand=18.9047 abs=0 id=2 ref=-60.4287 cand=-60.4287 abs=0 id=3 ref=14.4841 cand=14.4841 abs=0 id=4 ref=22.4232 cand=22.4232 abs=0
+ds4-test: Tensor equivalence short_code_completion top1 ref=3916 cand=3916 top5_overlap=5/5 overlap=20/20 max_rank_delta=0 rms=0 max_abs=0 top20_max_abs=0
+ds4-test: Tensor equivalence short_code_completion largest deltas: id=0 ref=-0.521216 cand=-0.521216 abs=0 id=1 ref=16.7878 cand=16.7878 abs=0 id=2 ref=-46.2201 cand=-46.2201 abs=0 id=3 ref=9.67199 cand=9.67199 abs=0 id=4 ref=20.0117 cand=20.0117 abs=0
+ds4-test: Tensor equivalence short_reasoning_plain top1 ref=926 cand=926 top5_overlap=5/5 overlap=20/20 max_rank_delta=0 rms=0 max_abs=0 top20_max_abs=0
+ds4-test: Tensor equivalence short_reasoning_plain largest deltas: id=0 ref=2.18593 cand=2.18593 abs=0 id=1 ref=21.1672 cand=21.1672 abs=0 id=2 ref=-42.0607 cand=-42.0607 abs=0 id=3 ref=11.2848 cand=11.2848 abs=0 id=4 ref=12.543 cand=12.543 abs=0
+ds4-test: Tensor equivalence long_memory_archive top1 ref=10220 cand=10220 top5_overlap=5/5 overlap=20/20 max_rank_delta=0 rms=0 max_abs=0 top20_max_abs=0
+ds4-test: Tensor equivalence long_memory_archive largest deltas: id=0 ref=-10.8615 cand=-10.8615 abs=0 id=1 ref=16.2764 cand=16.2764 abs=0 id=2 ref=-55.4447 cand=-55.4447 abs=0 id=3 ref=8.86885 cand=8.86885 abs=0 id=4 ref=15.1472 cand=15.1472 abs=0
+ds4-test: Tensor equivalence long_code_audit top1 ref=671 cand=671 top5_overlap=5/5 overlap=20/20 max_rank_delta=0 rms=0 max_abs=0 top20_max_abs=0
+ds4-test: Tensor equivalence long_code_audit largest deltas: id=0 ref=-4.86727 cand=-4.86727 abs=0 id=1 ref=18.1491 cand=18.1491 abs=0 id=2 ref=-51.2587 cand=-51.2587 abs=0 id=3 ref=11.4408 cand=11.4408 abs=0 id=4 ref=20.2212 cand=20.2212 abs=0
+ds4-test: Tensor summary route=auto cases=5 capture_fail=0 logits_fail=0 greedy_fail=0 top1_mismatch=0 min_top5_overlap=5/5 min_overlap=20/20 worst_rank_delta=0 worst_rms=0 worst_max_abs=0 worst_top20_max_abs=0
+metal-tensor-equivalence: OK
+streaming-decode-prefill-correctness:
+ds4-test: streaming decode-prefill correctness skipped (set DS4_TEST_SSD_STREAMING=1 to enable)
+streaming-decode-prefill-correctness: OK
+mtp-verify-depth:
+ds4: CUDA backend initialized on NVIDIA GB10 (sm_121) dev=0
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: q2k aligned repack base: 43 tensors 28.22 GiB in 118.0s (threads=6)
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: iq2 aligned repack base: 86 tensors 44.34 GiB in 185.2s (threads=6)
+ds4: direct I/O enabled for /mnt/seagate/ds4-models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf align=262144
+ds4: q8 aligned repack base: 345 tensors 6.15 GiB in 28.5s (threads=6)
+ds4: built 474 aligned CUDA artifacts (78.71 GiB) in 331.7s; expert raw residency replaced
+ds4: CUDA aligned artifacts replace expert residency; leaving the 80.76 GiB model mmap unpinned
+ds4: CUDA preparing model tensor mappings
+ds4: CUDA loading model tensors into device cache
+ds4: CUDA loading model tensors 2.37 GiB cached
+ds4: CUDA prepared model tensor mappings 2.99 GiB
+ds4: CUDA loading model tensors 4.78 GiB cached
+ds4: CUDA prepared model tensor mappings 5.94 GiB
+ds4: CUDA loading model tensors 7.10 GiB cached
+ds4: CUDA startup model preparation covered 8.20 GiB of tensor spans in 36.114s
+ds4: cuda backend initialized for graph diagnostics
+ds4-test: mtp-verify-depth skipped (set DS4_TEST_MTP to an MTP GGUF)
+mtp-verify-depth: OK
+dspark-verify-depth:
+ds4-test: dspark-verify-depth skipped (set DS4_TEST_DSPARK to a DSpark support GGUF)
+dspark-verify-depth: OK
+server:
+server: OK
