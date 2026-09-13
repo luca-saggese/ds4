@@ -171,6 +171,58 @@ extern "C" int ds4_gpu_dsv41_rope(
         x, width, heads, rows, start, 1u, compressed, inverse);
 }
 
+__global__ static void v41_engram_kernel(
+        float *residual, const float *kv, const float *qw,
+        const float *kw, const uint8_t *mask, uint32_t width, float eps) {
+    const uint32_t token = blockIdx.x, head = blockIdx.y;
+    const uint32_t lane = threadIdx.x;
+    if (mask && !mask[token]) return;
+    const uint64_t offset = ((uint64_t)token * 4u + head) * width;
+    const uint64_t key = ((uint64_t)token * 5u + head) * width;
+    const uint64_t value = ((uint64_t)token * 5u + 4u) * width;
+    float h2 = 0.0f, k2 = 0.0f, dot = 0.0f;
+    for (uint32_t i = lane; i < width; i += 32u) {
+        const float h = residual[offset + i];
+        const float k = v41_bf16(kv[key + i]);
+        const uint64_t wi = (uint64_t)head * width + i;
+        h2 += h * h;
+        k2 += k * k;
+        dot += h * (qw[wi] * kw[wi]) * k;
+    }
+    h2 = v41_sum32(h2);
+    k2 = v41_sum32(k2);
+    dot = v41_sum32(dot) * rsqrtf(h2 / (float)width + eps);
+    dot *= rsqrtf(k2 / (float)width + eps);
+    dot *= rsqrtf((float)width);
+    const float gate =
+        1.0f / (1.0f + expf(-copysignf(sqrtf(fmaxf(fabsf(dot), 1.0e-6f)), dot)));
+    for (uint32_t i = lane; i < width; i += 32u) {
+        residual[offset + i] = v41_bf16(
+            residual[offset + i] + gate * v41_bf16(kv[value + i]));
+    }
+}
+
+extern "C" int ds4_gpu_dsv41_engram_add(
+        ds4_gpu_tensor *residual, const ds4_gpu_tensor *kv,
+        const ds4_gpu_tensor *q_weight, const ds4_gpu_tensor *k_weight,
+        const ds4_gpu_tensor *mask, uint32_t width, uint32_t rows,
+        float eps) {
+    const uint64_t count = (uint64_t)width * rows;
+    if (!width || !rows || !isfinite(eps) || eps <= 0.0f ||
+        count > UINT64_MAX / 5u ||
+        !v41_tensor_has_f32(residual, count * 4u) ||
+        !v41_tensor_has_f32(kv, count * 5u) ||
+        !v41_tensor_has_f32(q_weight, (uint64_t)width * 4u) ||
+        !v41_tensor_has_f32(k_weight, (uint64_t)width * 4u) ||
+        (mask && !v41_tensor_has_bytes(mask, rows)))
+        return 0;
+    v41_engram_kernel<<<dim3(rows, 4u), 32>>>(
+        (float *)residual->ptr, (const float *)kv->ptr,
+        (const float *)q_weight->ptr, (const float *)k_weight->ptr,
+        mask ? (const uint8_t *)mask->ptr : NULL, width, eps);
+    return cuda_ok(cudaGetLastError(), "V4.1 Engram gate");
+}
+
 __global__ static void v41_pool_kernel(
         float *out, const float *kv, const float *scores,
         const float *previous_kv, const float *previous_scores,

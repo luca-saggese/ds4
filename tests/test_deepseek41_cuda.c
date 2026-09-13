@@ -229,6 +229,83 @@ static int check_pool_and_candidates(void) {
     return 1;
 }
 
+static int check_engram(void) {
+    enum { WIDTH = 128, ROWS = 3, HEADS = 4 };
+    float residual[ROWS * HEADS * WIDTH];
+    float expected[ROWS * HEADS * WIDTH];
+    float actual[ROWS * HEADS * WIDTH];
+    float kv[ROWS * 5 * WIDTH];
+    float qw[HEADS * WIDTH], kw[HEADS * WIDTH];
+    uint8_t mask[ROWS] = {1, 0, 1};
+    for (int i = 0; i < ROWS * HEADS * WIDTH; i++)
+        residual[i] = expected[i] = bf16(random_value());
+    for (int i = 0; i < ROWS * 5 * WIDTH; i++)
+        kv[i] = bf16(random_value());
+    for (int i = 0; i < HEADS * WIDTH; i++) {
+        qw[i] = random_value();
+        kw[i] = random_value();
+    }
+    for (int row = 0; row < ROWS; row++) {
+        if (!mask[row]) continue;
+        for (int head = 0; head < HEADS; head++) {
+            double dot = 0, h2 = 0, k2 = 0;
+            for (int i = 0; i < WIDTH; i++) {
+                const float h =
+                    residual[(row * HEADS + head) * WIDTH + i];
+                const float k = kv[(row * 5 + head) * WIDTH + i];
+                h2 += (double)h * h;
+                k2 += (double)k * k;
+                dot += (double)h * (qw[head * WIDTH + i] *
+                                    kw[head * WIDTH + i]) * k;
+            }
+            dot /= sqrt(h2 / WIDTH + 1e-20) *
+                   sqrt(k2 / WIDTH + 1e-20) * sqrt(WIDTH);
+            const double gate =
+                1.0 / (1.0 + exp(-copysign(
+                    sqrt(fmax(fabs(dot), 1e-6)), dot)));
+            for (int i = 0; i < WIDTH; i++) {
+                const int at = (row * HEADS + head) * WIDTH + i;
+                expected[at] = bf16(
+                    residual[at] +
+                    (float)gate * kv[(row * 5 + 4) * WIDTH + i]);
+            }
+        }
+    }
+    ds4_gpu_tensor *residual_t = upload(residual, sizeof(residual));
+    ds4_gpu_tensor *kv_t = upload(kv, sizeof(kv));
+    ds4_gpu_tensor *qw_t = upload(qw, sizeof(qw));
+    ds4_gpu_tensor *kw_t = upload(kw, sizeof(kw));
+    ds4_gpu_tensor *mask_t = upload(mask, sizeof(mask));
+    CHECK(residual_t && kv_t && qw_t && kw_t && mask_t);
+    CHECK(ds4_gpu_dsv41_engram_add(
+        residual_t, kv_t, qw_t, kw_t, mask_t, WIDTH, ROWS, 1e-20f));
+    CHECK(ds4_gpu_synchronize());
+    CHECK(ds4_gpu_tensor_read(
+        residual_t, 0, actual, sizeof(actual)));
+    double error2 = 0, norm2 = 0;
+    for (int i = 0; i < ROWS * HEADS * WIDTH; i++) {
+        const double error = actual[i] - expected[i];
+        CHECK(isfinite(actual[i]));
+        CHECK(fabs(error) <= fmax(1e-6, fabs(expected[i]) / 128));
+        error2 += error * error;
+        norm2 += (double)expected[i] * expected[i];
+    }
+    CHECK(sqrt(error2 / norm2) < 1e-4);
+    CHECK(!memcmp(
+        actual + HEADS * WIDTH,
+        residual + HEADS * WIDTH,
+        HEADS * WIDTH * sizeof(float)));
+    CHECK(!ds4_gpu_dsv41_engram_add(
+        residual_t, kv_t, qw_t, kw_t, mask_t, WIDTH, ROWS + 1, 1e-20f));
+
+    ds4_gpu_tensor_free(mask_t);
+    ds4_gpu_tensor_free(kw_t);
+    ds4_gpu_tensor_free(qw_t);
+    ds4_gpu_tensor_free(kv_t);
+    ds4_gpu_tensor_free(residual_t);
+    return 1;
+}
+
 static int check_gather_carry_and_indexer(void) {
     enum { SOURCE_ROWS = 4, KV_WIDTH = 512, SELECTED = 3 };
     float source[SOURCE_ROWS * KV_WIDTH];
@@ -312,6 +389,7 @@ int main(void) {
     CHECK(ds4_gpu_init());
     CHECK(check_quantization());
     CHECK(check_rope());
+    CHECK(check_engram());
     CHECK(check_pool_and_candidates());
     CHECK(check_gather_carry_and_indexer());
     ds4_gpu_cleanup();
