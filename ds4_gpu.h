@@ -162,7 +162,10 @@ int ds4_gpu_dsv41_indexer_topk_batch(ds4_gpu_tensor *selected,
                                     const ds4_gpu_tensor *scores,
                                     uint32_t width, uint32_t rows,
                                     uint32_t start, uint32_t ratio);
+#ifndef DS4_V41_CARRY_FORMAT_DEFINED
+#define DS4_V41_CARRY_FORMAT_DEFINED
 enum { DS4_V41_CARRY_BF16, DS4_V41_CARRY_MASK, DS4_V41_CARRY_F32 };
+#endif
 /* Lossless storage for already-BF16 activations or 0/-inf candidate masks.
  * Packed rows are padded to whole uint32_t words. Plain rows remain F32. */
 int ds4_gpu_dsv41_carry_copy(ds4_gpu_tensor *packed, uint32_t row_offset,

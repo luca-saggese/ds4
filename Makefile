@@ -338,6 +338,8 @@ tests/test_deepseek41_cuda: tests/test_deepseek41_cuda.o $(CORE_OBJS)
 test-deepseek41-cuda: tests/test_deepseek41_cuda
 	./tests/test_deepseek41_cuda
 
+ds4_cuda.o: cuda/ds4_cuda_v41.cuh
+
 tests/test_cuda_dspark_moe.o: cuda/mmq/test/test_iq2_aligned_entry.cu cuda/mmq/ds4_mmq.h
 	$(NVCC) $(NVCCFLAGS) -std=c++17 -Icuda/mmq -c -o $@ $<
 
