@@ -3293,6 +3293,7 @@ static bool accelerator_cache_q8_tensors(const ds4_model *m,
     for (uint64_t i = 0; i < m->n_tensors; i++) {
         const ds4_tensor *t = &m->tensors[i];
         if (t->bytes == 0) continue;
+        if (model_tensor_is_disk_only_engram(m, t)) continue;
         if (t->abs_offset > m->size || t->bytes > m->size - t->abs_offset) return false;
         if (!accelerator_span_filter_contains(t->abs_offset, t->bytes,
                                               span_offsets, span_sizes, span_count)) {
