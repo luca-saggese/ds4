@@ -1,0 +1,63 @@
+ds4: Linux cuda backend set oom_score_adj=1000
+ds4: CUDA backend initialized on NVIDIA GB10 (sm_121) dev=0
+ds4: SSD streaming initial cuda model map (1 spans, 0.99 GiB tensor span)
+ds4: CUDA host registration skipped: operation not supported
+ds4: CUDA preparing model tensor mappings
+ds4: CUDA loading model tensors into device cache
+ds4: CUDA startup model preparation covered 0.99 GiB of tensor spans in 0.627s
+ds4: cuda backend initialized for graph diagnostics
+ds4: memory: KV 0.10 GiB (raw 0.08 + compressed 0.01) + buffers 0.00 GiB + resident model 2.81 GiB = 2.91 GiB planned
+ds4: memory detail: ctx=1024 prefill_cap=1024 raw_kv_rows=1024 compressed_kv_rows=258 backend=cuda
+ds4: memory: KV 0.10 GiB (raw 0.08 + compressed 0.01) + buffers 0.00 GiB = 0.10 GiB context
+ds4: memory detail: ctx=1024 prefill_cap=1024 raw_kv_rows=1024 compressed_kv_rows=258 backend=cuda
+ds4: using GPU graph generation with graph prefill
+ds4: gpu prefill layer 1/43
+ds4: gpu prefill layer 2/43
+ds4: gpu prefill layer 3/43
+ds4: gpu prefill layer 4/43
+ds4: gpu prefill layer 5/43
+ds4: gpu prefill layer 6/43
+ds4: gpu prefill layer 7/43
+ds4: gpu prefill layer 8/43
+ds4: CUDA loading model tensors 16.03 GiB cached
+ds4: gpu prefill layer 9/43
+ds4: gpu prefill layer 10/43
+ds4: gpu prefill layer 11/43
+ds4: gpu prefill layer 12/43
+ds4: gpu prefill layer 13/43
+ds4: gpu prefill layer 14/43
+ds4: gpu prefill layer 15/43
+ds4: gpu prefill layer 16/43
+ds4: CUDA loading model tensors 32.06 GiB cached
+ds4: gpu prefill layer 17/43
+ds4: gpu prefill layer 18/43
+ds4: gpu prefill layer 19/43
+ds4: gpu prefill layer 20/43
+ds4: gpu prefill layer 21/43
+ds4: gpu prefill layer 22/43
+ds4: gpu prefill layer 23/43
+ds4: gpu prefill layer 24/43
+ds4: gpu prefill layer 25/43
+ds4: CUDA loading model tensors 48.06 GiB cached
+ds4: gpu prefill layer 26/43
+ds4: gpu prefill layer 27/43
+ds4: gpu prefill layer 28/43
+ds4: gpu prefill layer 29/43
+ds4: gpu prefill layer 30/43
+ds4: gpu prefill layer 31/43
+ds4: gpu prefill layer 32/43
+ds4: gpu prefill layer 33/43
+ds4: gpu prefill layer 34/43
+ds4: CUDA loading model tensors 64.02 GiB cached
+ds4: gpu prefill layer 35/43
+ds4: gpu prefill layer 36/43
+ds4: gpu prefill layer 37/43
+ds4: gpu prefill layer 38/43
+ds4: gpu prefill layer 39/43
+ds4: gpu prefill layer 40/43
+ds4: gpu prefill layer 41/43
+ds4: gpu prefill layer 42/43
+ds4: CUDA loading model tensors 80.05 GiB cached
+ds4: gpu prefill layer 43/43
+ds4: prefill: 0.50 t/s, generation: 0.89 t/s
+ds4: CUDA streaming expert-cache stats: fetch_calls=1376 expert_fetches=10417 hits=0 misses=10417 hit_rate=0.000 bytes_from_file=68.667 GiB bytes_from_cache=0.000 GiB bytes_per_fetch=6912.0 KiB

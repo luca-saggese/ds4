@@ -1,0 +1,12 @@
+You are checking a long technical archive. Read the repeated records and answer only the final question with one short sentence.
+
+Record 000: the archive entry says that component alpha keeps a compressed index, component beta keeps raw observations, and component gamma reports anomalies only after the checksum phrase appears. Do not summarize yet; retain the exact final question.
+Record 001: the archive entry says that component alpha keeps a compressed index, component beta keeps raw observations, and component gamma reports anomalies only after the checksum phrase appears. Do not summarize yet; retain the exact final question.
+Record 002: the archive entry says that component alpha keeps a compressed index, component beta keeps raw observations, and component gamma reports anomalies only after the checksum phrase appears. Do not summarize yet; retain the exact final question.
+Record 003: the archive entry says that component alpha keeps a compressed index, component beta keeps raw observations, and component gamma reports anomalies only after the checksum phrase appears. Do not summarize yet; retain the exact final question.
+Record 004: the archive entry says that component alpha keeps a compressed index, component beta keeps raw observations, and component gamma reports anomalies only after the checksum phrase appears. Do not summarize yet; retain the exact final question.
+Record 005: the archive entry says that component alpha keeps a compressed index, component beta keeps raw observations, and component gamma reports anomalies only after the checksum phrase appears. Do not summarize yet; retain the exact final question.
+Record 006: the archive entry says that component alpha keeps a compressed index, component beta keeps raw observations, and component gamma reports anomalies only after the checksum phrase appears. Do not summarize yet; retain the exact final question.
+Record 007: the archive entry says that component alpha keeps a compressed index, component beta keeps raw observations, and component gamma reports anomalies only after the checksum phrase appears. Do not summarize yet; retain the exact final question.
+Record 008: the archive entry says that component alpha keeps a compressed index, component beta keeps raw observations, and component gamma reports anomalies only after the checksum phrase appears. Do not summarize yet; retain the exact final question.
+Record 009: the archive entry says that component alpha keeps a compressed index, co

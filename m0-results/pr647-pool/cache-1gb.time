@@ -1,0 +1,23 @@
+	Command being timed: "./ds4 -m ./DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf --ssd-streaming --ssd-streaming-cold --ssd-streaming-cache-experts 1GB --ctx 1024 --temp 0 --tokens 32 --nothink -p Explain in one short sentence why the sky appears blue."
+	User time (seconds): 13.15
+	System time (seconds): 44.62
+	Percent of CPU this job got: 83%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:09.23
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1326212
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 38
+	Minor (reclaiming a frame) page faults: 326756
+	Voluntary context switches: 86884
+	Involuntary context switches: 385
+	Swaps: 0
+	File system inputs: 327613784
+	File system outputs: 40
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

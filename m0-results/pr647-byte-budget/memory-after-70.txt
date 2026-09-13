@@ -1,0 +1,3 @@
+               total        utiliz     liber     condiv buff/cache   disponibile
+Mem:           121Gi       3,5Gi       115Gi        33Mi       4,3Gi       118Gi
+Swap:           15Gi       202Mi        15Gi
