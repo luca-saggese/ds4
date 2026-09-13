@@ -328,6 +328,16 @@ tests/test_cuda_q8_scratch: tests/test_cuda_q8_scratch.o $(CORE_OBJS)
 test-cuda-q8-scratch: tests/test_cuda_q8_scratch
 	./tests/test_cuda_q8_scratch
 
+tests/test_deepseek41_cuda.o: tests/test_deepseek41_cuda.c ds4_gpu.h
+	$(CC) $(filter-out -ffast-math,$(CFLAGS)) -I. -c -o $@ $<
+
+tests/test_deepseek41_cuda: tests/test_deepseek41_cuda.o $(CORE_OBJS)
+	$(DS4_LINK) -o $@ $^ $(DS4_LINK_LIBS)
+
+.PHONY: test-deepseek41-cuda
+test-deepseek41-cuda: tests/test_deepseek41_cuda
+	./tests/test_deepseek41_cuda
+
 tests/test_cuda_dspark_moe.o: cuda/mmq/test/test_iq2_aligned_entry.cu cuda/mmq/ds4_mmq.h
 	$(NVCC) $(NVCCFLAGS) -std=c++17 -Icuda/mmq -c -o $@ $<
 
@@ -847,6 +857,7 @@ clean:
 	rm -f tests/test_deepseek41_prefill
 	rm -f tests/test_metal_tp_bulk
 	rm -f tests/test_cuda_q8_scratch
+	rm -f tests/test_deepseek41_cuda
 	rm -f tests/test_cuda_dspark_moe
 	rm -f tests/test_quality_api
 	rm -f tests/test_linux_memory tests/test_rocm_memory

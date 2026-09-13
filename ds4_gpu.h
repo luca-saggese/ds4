@@ -78,15 +78,17 @@ int ds4_gpu_begin_commands(void);
 int ds4_gpu_flush_encoder(void);
 int ds4_gpu_flush_commands(void);
 int ds4_gpu_commands_active(void);
-#ifdef __APPLE__
 /* V4.1 activation/cache formats. Buffers are float-addressable but the
  * rounded values follow the released BF16/FP8/FP4 inference graph. */
+#ifndef DS4_V41_ACTIVATION_FORMAT_DEFINED
+#define DS4_V41_ACTIVATION_FORMAT_DEFINED
 typedef enum {
     DS4_V41_BF16 = 0,
     DS4_V41_FP8_E8M0 = 1,
     DS4_V41_FP4_E8M0 = 2,
     DS4_V41_FP4_E4M3 = 3,
 } ds4_v41_activation_format;
+#endif
 int ds4_gpu_dsv41_quantize(ds4_gpu_tensor *x, uint32_t width, uint32_t rows,
                           ds4_v41_activation_format format);
 /* Full-head prefill, with BF16 rounding between the two Q8 projections. */
@@ -176,6 +178,7 @@ int ds4_gpu_dsv41_projection_rows(ds4_gpu_tensor *out,
 int ds4_gpu_dsv41_gather_kv(ds4_gpu_tensor *out, const ds4_gpu_tensor *source,
                            const ds4_gpu_tensor *ids, uint32_t source_rows,
                            uint32_t selected_rows);
+#ifdef __APPLE__
 int ds4_gpu_parallel_ffn_finish(void);
 void ds4_gpu_parallel_ffn_abort(void);
 int ds4_gpu_parallel_ffn_start(
