@@ -40056,8 +40056,27 @@ static bool ds41_graph_after_moe(ds41_gpu_graph *g) {
 
 static bool ds41_graph_layer(ds41_gpu_graph *g, const ds4_model *m,
                             const ds4_layer_weights *l, uint32_t il, int token) {
-    return ds41_graph_before_moe(g, m, l, il) && ds41_moe(g, m, l, il, (uint32_t)token) &&
-        ds41_graph_after_moe(g);
+    if (!ds41_graph_before_attention(g, m, l, il)) {
+        fprintf(stderr, "ds4: V4.1 layer %u failed before attention\n", il);
+        return false;
+    }
+    if (!ds41_attention(g, m, l, il, false)) {
+        fprintf(stderr, "ds4: V4.1 layer %u failed in attention\n", il);
+        return false;
+    }
+    if (!ds41_graph_after_attention(g, m, l)) {
+        fprintf(stderr, "ds4: V4.1 layer %u failed after attention\n", il);
+        return false;
+    }
+    if (!ds41_moe(g, m, l, il, (uint32_t)token)) {
+        fprintf(stderr, "ds4: V4.1 layer %u failed in routed MoE\n", il);
+        return false;
+    }
+    if (!ds41_graph_after_moe(g)) {
+        fprintf(stderr, "ds4: V4.1 layer %u failed after routed MoE\n", il);
+        return false;
+    }
+    return true;
 }
 
 static bool ds41_route_batch(ds41_gpu_graph *g, const ds4_model *m,
