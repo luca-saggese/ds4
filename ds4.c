@@ -50,6 +50,12 @@
 #include "ds4_linux_memory.h"
 #endif
 
+#if !defined(DS4_NO_GPU)
+#define DS4_HAVE_V41_GPU 1
+#else
+#define DS4_HAVE_V41_GPU 0
+#endif
+
 /* TP context for the verify-block RDMA window (set with the gate callbacks). */
 #if !defined(DS4_NO_GPU) && defined(__APPLE__)
 static ds4_tp *g_tp_block_ctx;
@@ -38628,7 +38634,7 @@ static ds4_context_memory glm_graph_context_memory_estimate_for_compact_cap(
             normal_layers - 1u);
 }
 
-#if defined(__APPLE__)
+#if DS4_HAVE_V41_GPU
 static ds4_context_memory ds41_graph_memory(uint32_t ctx);
 #endif
 
@@ -38641,7 +38647,7 @@ ds4_context_memory ds4_context_memory_estimate_with_prefill_mode(
     uint32_t ctx = ctx_size > 0 ? (uint32_t)ctx_size : 1u;
 
     if (ds4_backend_uses_graph(backend)) {
-#if defined(__APPLE__)
+#if DS4_HAVE_V41_GPU
         if (DS4_MODEL_FAMILY == DS4_MODEL_FAMILY_DEEPSEEK41)
             return ds41_graph_memory(ctx);
 #endif
@@ -39043,9 +39049,9 @@ bool ds4_tokens_starts_with(const ds4_tokens *tokens, const ds4_tokens *prefix) 
     return true;
 }
 
-#if defined(__APPLE__) && !defined(DS4_NO_GPU)
+#if DS4_HAVE_V41_GPU
 /* =========================================================================
- * DeepSeek V4.1 Metal Graph.
+ * DeepSeek V4.1 GPU Graph.
  * =========================================================================
  * Four layers own compressed KV/index keys. Every layer owns its sliding
  * window; index-source layers publish selections for following reuse layers.
@@ -40196,6 +40202,11 @@ static bool ds41_tp_batch_enabled(const ds41_gpu_graph *g) {
 }
 
 static uint32_t ds41_prefill_count(const ds41_gpu_graph *g, uint32_t remaining) {
+#if !defined(__APPLE__) && !defined(DS4_ROCM_BUILD)
+    (void)g;
+    (void)remaining;
+    return 1;
+#else
     /* TP batches use the bulk protocol; row-gate ablations stay token-major. */
     if (!ds41_tp_batch_enabled(g) || g->imatrix ||
         getenv("DS4_METAL_DISABLE_V41_LAYER_PREFILL")) return 1;
@@ -40219,6 +40230,7 @@ static uint32_t ds41_prefill_count(const ds41_gpu_graph *g, uint32_t remaining) 
     }
     const uint32_t tail_cap = g->prefill_cap < 2048u ? g->prefill_cap : 2048u;
     return remaining < tail_cap ? remaining : tail_cap;
+#endif
 }
 
 typedef struct {
@@ -56653,7 +56665,7 @@ struct ds4_session {
     uint64_t tp_session_id;
     uint64_t glm_reserved_graph_bytes;
 #ifndef DS4_NO_GPU
-#ifdef __APPLE__
+#if DS4_HAVE_V41_GPU
     ds41_gpu_graph ds41_graph;
     bool ds41_graph_ready;
 #endif
@@ -58761,7 +58773,7 @@ static void session_greedy_splitkv_reset(ds4_session *s) {
 }
 #endif
 
-#if defined(__APPLE__) && !defined(DS4_NO_GPU)
+#if DS4_HAVE_V41_GPU
 typedef struct {
     ds4_gpu_tensor *tensor;
     uint64_t bytes;
@@ -58873,7 +58885,7 @@ static int ds41_load_payload(ds4_session *s, FILE *fp, const uint32_t *h,
 uint64_t ds4_session_payload_bytes(ds4_session *s) {
     if (!s || !s->checkpoint_valid) return 0;
     if (s->distributed) return 0;
-#if defined(__APPLE__) && !defined(DS4_NO_GPU)
+#if DS4_HAVE_V41_GPU
     if (ds4_session_is_ds41(s)) {
         if (!s->ds41_graph_ready || !s->ds41_graph.valid ||
             s->ds41_graph.pos != (uint32_t)s->checkpoint.len) return 0;
@@ -59013,7 +59025,7 @@ int ds4_session_save_payload(ds4_session *s, FILE *fp, char *err, size_t errlen)
     if (s->distributed) {
         return ds4_dist_session_save_payload(s->distributed, s, fp, err, errlen);
     }
-#if defined(__APPLE__) && !defined(DS4_NO_GPU)
+#if DS4_HAVE_V41_GPU
     if (ds4_session_is_ds41(s)) return ds41_save_payload(s, fp, err, errlen);
 #endif
     if (ds4_session_is_glm(s)) {
@@ -59392,7 +59404,7 @@ int ds4_session_load_payload(ds4_session *s, FILE *fp, uint64_t payload_bytes, c
         ds4_tokens_free(&tokens);
         return rc;
     }
-#if defined(__APPLE__) && !defined(DS4_NO_GPU)
+#if DS4_HAVE_V41_GPU
     if (ds4_session_is_ds41(s)) return ds41_load_payload(s, fp, h, remaining, err, errlen);
 #endif
     if (ds4_session_is_glm(s)) {
@@ -65653,7 +65665,9 @@ static int ds4_engine_open_internal(ds4_engine **out,
     }
     config_validate_model(&e->model);
     if (DS4_MODEL_FAMILY == DS4_MODEL_FAMILY_DEEPSEEK41 && !opt->inspect_only) {
-        const bool supported = e->backend == DS4_BACKEND_METAL &&
+        const bool supported =
+            (e->backend == DS4_BACKEND_METAL ||
+             e->backend == DS4_BACKEND_CUDA) &&
             opt->distributed.role == DS4_DISTRIBUTED_NONE &&
             !load_slice && !opt->dspark && !opt->glm_mtp &&
             !opt->first_token_test && !opt->metal_graph_test &&
@@ -67631,13 +67645,17 @@ int ds4_session_create(ds4_session **out, ds4_engine *e, int ctx_size) {
     ds4_session *s = xcalloc(1, sizeof(*s));
     s->engine = e;
     s->ctx_size = ctx_size;
-#ifdef __APPLE__
+#if DS4_HAVE_V41_GPU
     if (DS4_MODEL_FAMILY == DS4_MODEL_FAMILY_DEEPSEEK41) {
-        if (ctx_size > 1048576 ||
-            !ds41_memory_admit(e, ds4_add_sat_u64(e->ds41_session_bytes,
-                ds41_graph_bytes((uint32_t)ctx_size)), false) ||
-            !ds41_graph_alloc(&s->ds41_graph, &e->model, &e->weights,
-                              e->model_path, (uint32_t)ctx_size, e->ssd_streaming)) {
+        bool admitted = ctx_size <= 1048576;
+#ifdef __APPLE__
+        admitted = admitted &&
+            ds41_memory_admit(e, ds4_add_sat_u64(e->ds41_session_bytes,
+                ds41_graph_bytes((uint32_t)ctx_size)), false);
+#endif
+        if (!admitted || !ds41_graph_alloc(
+                &s->ds41_graph, &e->model, &e->weights,
+                e->model_path, (uint32_t)ctx_size, e->ssd_streaming)) {
             free(s);
             return 1;
         }
@@ -67997,7 +68015,7 @@ void ds4_session_free(ds4_session *s) {
     }
 #ifndef DS4_NO_GPU
     else {
-#ifdef __APPLE__
+#if DS4_HAVE_V41_GPU
         if (s->ds41_graph_ready) {
             s->engine->ds41_session_bytes -= s->ds41_graph.allocation_bytes;
             ds41_graph_free(&s->ds41_graph);
@@ -69573,7 +69591,7 @@ int ds4_session_sync_multimodal(
     }
     s->sync_images = images;
     s->sync_image_count = image_count;
-#if defined(__APPLE__) && !defined(DS4_NO_GPU)
+#if DS4_HAVE_V41_GPU
     if (ds4_session_is_ds41(s)) {
         s->ds41_graph.images = images;
         s->ds41_graph.image_count = image_count;
@@ -69584,7 +69602,7 @@ int ds4_session_sync_multimodal(
     s->graph.prefill_vision_span_count = image_count;
 #endif
     const int rc = ds4_session_sync(s, prompt, err, errlen);
-#if defined(__APPLE__) && !defined(DS4_NO_GPU)
+#if DS4_HAVE_V41_GPU
     if (ds4_session_is_ds41(s)) {
         s->ds41_graph.images = NULL;
         s->ds41_graph.image_count = 0;
@@ -69688,7 +69706,7 @@ static int ds4_session_sync_internal(ds4_session *s, const ds4_tokens *prompt, c
     ds4_engine *e = s->engine;
     const char *backend_name = ds4_backend_name(e->backend);
     (void)backend_name; (void)e;
-#ifdef __APPLE__
+#if DS4_HAVE_V41_GPU
     if (ds4_session_is_ds41(s)) {
         ds41_gpu_graph *g = &s->ds41_graph;
         if (!s->ds41_graph_ready) {
@@ -71607,7 +71625,7 @@ static int ds4_session_eval_internal(ds4_session *s, int token, bool probe_mtp,
     return 1;
 #else
     ds4_engine *e = s->engine;
-#ifdef __APPLE__
+#if DS4_HAVE_V41_GPU
     if (ds4_session_is_ds41(s)) {
         if (!s->ds41_graph_ready ||
             (!s->checkpoint_valid && s->checkpoint.len != 0) ||
@@ -78334,7 +78352,7 @@ void ds4_session_invalidate(ds4_session *s) {
     s->checkpoint_image_count = 0;
     ds4_session_dspark_capture_invalidate(s);
 #ifndef DS4_NO_GPU
-#ifdef __APPLE__
+#if DS4_HAVE_V41_GPU
     if (s->ds41_graph_ready) ds41_graph_reset(&s->ds41_graph);
 #endif
     ds4_session_glm_reset_dense_cache(s);

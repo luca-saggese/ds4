@@ -557,3 +557,72 @@ extern "C" int ds4_gpu_dsv41_indexer_scores_packed(
     (void)offset;
     return 0;
 }
+
+extern "C" int ds4_gpu_dsv41_projection_rows(
+        ds4_gpu_tensor *out, const void *model_map, uint64_t model_size,
+        uint64_t weight_offset, uint32_t width, uint32_t outputs,
+        uint32_t rows, const ds4_gpu_tensor *in) {
+    if (!width || !outputs || !rows || rows > 8192u || !model_map ||
+        !v41_tensor_has_f32(in, (uint64_t)width * rows) ||
+        !v41_tensor_has_f32(out, (uint64_t)outputs * rows))
+        return 0;
+    return ds4_gpu_matmul_f16_tensor(
+        out, model_map, model_size, weight_offset,
+        width, outputs, in, rows);
+}
+
+extern "C" int ds4_gpu_dsv41_attention_output_batch(
+        ds4_gpu_tensor *out, ds4_gpu_tensor *low,
+        const void *model_map, uint64_t model_size,
+        uint64_t out_a_offset, uint64_t out_b_offset,
+        const ds4_gpu_tensor *heads, uint32_t n_tokens) {
+    if (!n_tokens || !v41_tensor_has_f32(
+            heads, (uint64_t)n_tokens * 32768u) ||
+        !v41_tensor_has_f32(low, (uint64_t)n_tokens * 8192u) ||
+        !v41_tensor_has_f32(out, (uint64_t)n_tokens * 5120u))
+        return 0;
+    return ds4_gpu_attention_output_low_q8_rows_exact_tensor(
+               low, model_map, model_size, out_a_offset,
+               4096u, 1024u, 8u, 0u, 8u, heads, n_tokens) &&
+           ds4_gpu_dsv41_quantize(
+               low, 8192u, n_tokens, DS4_V41_BF16) &&
+           ds4_gpu_matmul_q8_0_tensor(
+               out, model_map, model_size, out_b_offset,
+               8192u, 5120u, low, n_tokens);
+}
+
+extern "C" int ds4_gpu_dsv41_attention_output_tp_batch(
+        ds4_gpu_tensor *out, ds4_gpu_tensor *low,
+        const void *model_map, uint64_t model_size,
+        uint64_t out_a_offset, uint64_t out_b_offset,
+        const ds4_gpu_tensor *heads, uint32_t n_tokens,
+        uint32_t tp_rank) {
+    (void)out;
+    (void)low;
+    (void)model_map;
+    (void)model_size;
+    (void)out_a_offset;
+    (void)out_b_offset;
+    (void)heads;
+    (void)n_tokens;
+    (void)tp_rank;
+    return 0;
+}
+
+extern "C" int ds4_gpu_hc_rms_scale_project_f16_tensor(
+        ds4_gpu_tensor *out, ds4_gpu_tensor *scale_scratch,
+        const void *model_map, uint64_t model_size,
+        uint64_t weight_offset, uint32_t in_dim, uint32_t out_dim,
+        const ds4_gpu_tensor *x, uint32_t n_rows, float eps) {
+    if (!in_dim || !out_dim || !n_rows || !isfinite(eps) || eps <= 0.0f)
+        return 0;
+    return ds4_gpu_rms_norm_plain_rows_tensor(
+               scale_scratch, x, in_dim, n_rows, eps) &&
+           ds4_gpu_dsv41_projection_rows(
+               out, model_map, model_size, weight_offset,
+               in_dim, out_dim, n_rows, scale_scratch);
+}
+
+extern "C" int ds4_gpu_tp_failed(void) {
+    return 0;
+}
