@@ -179,6 +179,8 @@ static uint64_t g_cuda_stream_stats_cache_hits;       /* always 0 today; see abo
 static uint64_t g_cuda_stream_stats_cache_misses;     /* == expert_fetches today */
 static uint64_t g_cuda_stream_stats_bytes_from_file;  /* bytes pread via mapped view */
 static uint64_t g_cuda_stream_stats_bytes_from_cache; /* always 0 today; see above */
+static uint64_t g_cuda_stream_stats_selected_mmq_compact_calls;
+static uint64_t g_cuda_stream_stats_selected_mmq_full_table_calls;
 
 static uint32_t cuda_stream_expert_cache_configured_budget(void);
 static uint32_t g_cuda_expert_cache_entry_count_getter(void);
@@ -201,7 +203,8 @@ extern "C" void ds4_gpu_print_cuda_stream_stats(void) {
             "ds4: CUDA streaming expert-cache stats: fetch_calls=%llu "
             "expert_fetches=%llu hits=%llu misses=%llu hit_rate=%.3f "
             "bytes_from_file=%.3f GiB bytes_from_cache=%.3f GiB "
-            "bytes_per_fetch=%.1f KiB budget=%u entries=%u\n",
+            "bytes_per_fetch=%.1f KiB budget=%u entries=%u "
+            "selected_mmq_compact_calls=%llu selected_mmq_full_table_calls=%llu\n",
             (unsigned long long)g_cuda_stream_stats_fetch_calls,
             (unsigned long long)g_cuda_stream_stats_expert_fetches,
             (unsigned long long)g_cuda_stream_stats_cache_hits,
@@ -211,7 +214,9 @@ extern "C" void ds4_gpu_print_cuda_stream_stats(void) {
             (double)g_cuda_stream_stats_bytes_from_cache / (1024.0 * 1024.0 * 1024.0),
             bytes_per_fetch / 1024.0,
             cuda_stream_expert_cache_configured_budget(),
-            g_cuda_expert_cache_entry_count_getter());
+            g_cuda_expert_cache_entry_count_getter(),
+            (unsigned long long)g_cuda_stream_stats_selected_mmq_compact_calls,
+            (unsigned long long)g_cuda_stream_stats_selected_mmq_full_table_calls);
     /* True memory footprint self-report (cache-budget accounting):
      * budget = nominal dynamic-cache byte budget (experts * slab bytes);
      * counted = bytes held by valid entries at their actual per-entry
@@ -25016,6 +25021,11 @@ static int routed_moe_launch(
             g_stream_selected_cache.slot_selected_tensor.ptr &&
             g_stream_selected_cache.slot_selected_tensor.bytes >=
                 slot_count * sizeof(int32_t);
+        if (use_stream_selected_cache) {
+            g_cuda_stream_stats_selected_mmq_compact_calls++;
+        } else {
+            g_cuda_stream_stats_selected_mmq_full_table_calls++;
+        }
         const ds4_gpu_tensor *mmq_selected = use_stream_selected_cache ?
             &g_stream_selected_cache.slot_selected_tensor : selected;
         const uint32_t mmq_expert_count = use_stream_selected_cache ?
