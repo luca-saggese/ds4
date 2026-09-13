@@ -55920,6 +55920,7 @@ static int generate_metal_graph_raw_swa(
             "ds4: prefill: %.2f t/s, generation: %.2f t/s\n",
             prefill_s > 0.0 ? (double)prompt->len / prefill_s : 0.0,
             decode_s > 0.0 ? (double)n_generated / decode_s : 0.0);
+    ds4_gpu_print_cuda_stream_stats();
 
     if (memory_report) ds4_gpu_print_memory_report("before graph free");
     free(logits);
@@ -61250,6 +61251,7 @@ int ds4_engine_generate_argmax(
                     "ds4: prefill: %.2f t/s, generation: %.2f t/s\n",
                     (t_prefill1 - t_prefill0) > 0.0 ? (double)prompt->len / (t_prefill1 - t_prefill0) : 0.0,
                     (t_decode1 - t_decode0) > 0.0 ? (double)n_generated / (t_decode1 - t_decode0) : 0.0);
+            ds4_gpu_print_cuda_stream_stats();
             ds4_session_free(s);
             return rc;
         }
