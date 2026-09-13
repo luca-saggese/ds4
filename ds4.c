@@ -2588,6 +2588,13 @@ static void parse_tensors(ds4_model *m, ds4_cursor *c) {
     }
 }
 
+#if !defined(__APPLE__)
+static int model_engram_table_index(const ds4_tensor *t) {
+    return ds4_streq(t->name, "blk.1.engram_embd.weight") ? 0 :
+           ds4_streq(t->name, "blk.14.engram_embd.weight") ? 1 : -1;
+}
+#endif
+
 /* Engram is deliberately outside the weight mapping, not merely absent from
  * a residency list. Startup warming and any future weight-view code must not
  * turn its 189 GiB of random-access rows into a resident model allocation. */
@@ -2627,6 +2634,25 @@ static void model_unmap_engram(ds4_model *m) {
         ds4_die_errno("cannot unmap disk-only region", "Engram");
     m->size = start;
 }
+
+#if !defined(__APPLE__)
+static bool model_tensor_is_disk_only_engram(
+        const ds4_model *m, const ds4_tensor *t) {
+    if (m->file_size <= m->size || t->abs_offset < m->size ||
+        model_engram_table_index(t) < 0 || t->type != DS4_TENSOR_I8 ||
+        t->ndim != 2 || t->dim[0] != DS4_ENGRAM_ROW_BYTES ||
+        !t->dim[1] || t->dim[1] > UINT32_MAX ||
+        t->bytes != t->dim[1] * DS4_ENGRAM_ROW_BYTES ||
+        t->abs_offset > m->file_size ||
+        t->bytes > m->file_size - t->abs_offset)
+        return false;
+    ds4_str arch = {0}, encoding = {0};
+    return model_get_string(m, "general.architecture", &arch) &&
+           ds4_streq(arch, "deepseek41") &&
+           model_get_string(m, "deepseek41.engram.encoding", &encoding) &&
+           ds4_streq(encoding, "e4m3_e8m0_32_row264");
+}
+#endif
 
 /* Open and map the GGUF once.  Metal needs a shared mapping for no-copy
  * MTLBuffers; CPU uses a private read-only mapping to avoid Darwin VM stress.
@@ -3163,6 +3189,9 @@ static bool accelerator_prepare_model_tensor_spans(const ds4_model *m,
     for (uint64_t i = 0; i < m->n_tensors; i++) {
         const ds4_tensor *t = &m->tensors[i];
         if (t->bytes == 0) continue;
+#if !defined(__APPLE__)
+        if (model_tensor_is_disk_only_engram(m, t)) continue;
+#endif
         if (t->abs_offset > m->size || t->bytes > m->size - t->abs_offset) {
             free(spans);
             return false;
